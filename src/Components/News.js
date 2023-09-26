@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
+import PropTypes from 'prop-types'
 
 export class News extends Component {
   articles = [
@@ -79,7 +80,7 @@ export class News extends Component {
       url: "http://www.bbc.co.uk/news/live/world-66888101",
       urlToImage: "https://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/5.3.0/bbc_news_logo.png",
       publishedAt: "2023-09-22T10:37:20.5099534Z",
-      content: "We resume our coverage of Ukraine-related events as President Volodymyr Zelensky is in Canada on an unannounced visit to rally support for his country.\r\nOn Thursday, he was in the US where President … [+510 chars]",
+      content: "We resume our coverage of Ukraine-related events as President Volodymyr Zelensky is in Canada on an unannounced visit to rally support for his category=${this.props.category}&country.\r\nOn Thursday, he was in the US where President … [+510 chars]",
     },
     {
       source: {
@@ -105,7 +106,7 @@ export class News extends Component {
       url: "http://www.bbc.co.uk/news/world-us-canada-66885865",
       urlToImage: "https://ichef.bbci.co.uk/news/1024/branded_news/008E/production/_131224100_gettyimages-1680798739.jpg",
       publishedAt: "2023-09-22T06:22:22.0723363Z",
-      content: "Ukrainian president Volodymyr Zelensky has arrived in Canada on an unannounced visit to rally support for his country.\r\nCanadian TV showed Prime Minister Justin Trudeau meeting Mr Zelensky on the run… [+1659 chars]",
+      content: "Ukrainian president Volodymyr Zelensky has arrived in Canada on an unannounced visit to rally support for his category=${this.props.category}&country.\r\nCanadian TV showed Prime Minister Justin Trudeau meeting Mr Zelensky on the run… [+1659 chars]",
     },
     {
       source: {
@@ -122,6 +123,20 @@ export class News extends Component {
     },
   ];
 
+  static defaultProps = {
+    category: "sports",
+    pageSize: 6,
+    countryCode: "in",
+    newsApi: "e56c12946e1548deb202af0f4f2b4e38",
+  };
+
+  static propTypes  = {
+    category: PropTypes.string,
+    pageSize: PropTypes.number,
+    countryCode: PropTypes.string,
+    newsApi: PropTypes.string,
+  };
+
   constructor() {
     super();
     this.state = {
@@ -132,15 +147,15 @@ export class News extends Component {
   }
 
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=e56c12946e1548deb202af0f4f2b4e38&page=1&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.countryCode}&apiKey=${this.props.newsApi}&page=1&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({ articles: parsedData.articles, totalResults: parsedData.totalResults });
-    console.log(this.props.pageSize)
+    console.log(this.props.pageSize);
   }
 
   btnPrevPage = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=e56c12946e1548deb202af0f4f2b4e38&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.countryCode}&apiKey=${this.props.newsApi}&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
@@ -149,7 +164,7 @@ export class News extends Component {
     });
   };
   btnNextPage = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=e56c12946e1548deb202af0f4f2b4e38&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.countryCode}&apiKey=${this.props.newsApi}&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
