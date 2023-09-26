@@ -161,7 +161,7 @@ export class News extends Component {
   render() {
     return (
       <div className="container">
-        <h1 className="display-6 fs-2">NewsBubble - Top Headlines</h1>
+        <h1 className="display-6 fs-2 text-center my-4">NewsBubble - Top Headlines</h1>
         <div className="row my-3">
           {this.state.articles.map((element) => {
             return (
