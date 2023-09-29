@@ -4,22 +4,6 @@ import PropTypes from "prop-types";
 import LoadingSpinner from "./LoadingSpinner";
 
 export class News extends Component {
-  articles = [
-    {
-      source: {
-        id: "",
-        name: "",
-      },
-      author: "",
-      title: "",
-      description: "",
-      url: "",
-      urlToImage: "",
-      publishedAt: "",
-      content: "",
-    },
-  ];
-
   static defaultProps = {
     category: "sports",
     pageSize: 6,
@@ -37,7 +21,7 @@ export class News extends Component {
   constructor() {
     super();
     this.state = {
-      articles: this.articles,
+      articles: [],
       loading: false,
       page: 1,
     };
