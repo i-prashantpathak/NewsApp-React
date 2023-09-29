@@ -43,54 +43,70 @@ export class News extends Component {
     };
   }
 
-  async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.countryCode}&apiKey=${this.props.newsApi}&page=1&pageSize=${this.props.pageSize}`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({ articles: parsedData.articles, totalResults: parsedData.totalResults, loading: false });
-  }
+  async UpdateNews() {}
 
-  btnPrevPage = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.countryCode}&apiKey=${this.props.newsApi}&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+  componentDidMount = async () => {
+    const url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.countryCode}&apiKey=${this.props.newsApi}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
       articles: parsedData.articles,
-      page: this.state.page - 1,
+      totalResults: parsedData.totalResults,
       loading: false,
     });
   };
-  btnNextPage = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.countryCode}&apiKey=${this.props.newsApi}&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+
+  btnPrevPage = async () => {
+    const url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.countryCode}&apiKey=${this.props.newsApi}&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
       articles: parsedData.articles,
-      page: this.state.page + 1,
+      totalResults: parsedData.totalResults,
       loading: false,
+      page: this.state.page - 1,
+    });
+  };
+
+  btnNextPage = async () => {
+    const url = `https://newsapi.org/v2/top-headlines?category=${this.props.category}&country=${this.props.countryCode}&apiKey=${this.props.newsApi}&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+    this.setState({ loading: true });
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    this.setState({
+      articles: parsedData.articles,
+      totalResults: parsedData.totalResults,
+      loading: false,
+      page: this.state.page + 1,
     });
   };
 
   render() {
     return (
       <div className="container">
-        <h1 className="display-6 fs-2 text-center my-4">NewsBubble - Top Headlines</h1>
+        {/* adding paragraph for showing page number of newspaper */}
+        <p className="d-flex justify-content-end my-3 text-secondary"> Page : {this.state.page}</p>
+        {/* Heading */}
+        <h1 className="display-6 fs-2 text-center my-4">
+          {this.props.AppName} - Top Headlines [ {this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1).toLowerCase()} ]
+        </h1>
+        {/* LoadingSpinner */}
         {this.state.loading && <LoadingSpinner />}
         <div className="row my-3">
-          {!this.state.loading && this.state.articles.map((element) => {
-            return (
-              <div className="col-md-4" key={element.url}>
-                <NewsItem title={element.title} description={element.description} imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name} />
-              </div>
-            );
-          })}
+          {/* News Data */}
+          {!this.state.loading &&
+            this.state.articles.map((element) => {
+              return (
+                <div className="col-md-4" key={element.url}>
+                  <NewsItem title={element.title} description={element.description} imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name} />
+                </div>
+              );
+            })}
         </div>
         <div className="container d-flex justify-content-between my-3">
           <button disabled={this.state.page <= 1} className="btn btn-sm btn-dark" onClick={this.btnPrevPage}>
-            {" "}
             &larr; Previous
           </button>
           <button disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize) ? true : false} className="btn btn-sm btn-dark nextBtn" onClick={this.btnNextPage}>
